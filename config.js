@@ -27,7 +27,7 @@ const CONFIG = {
             // Controls which Ties 2 page design is linked from the homepage
             // 'minimal' — matches the main site aesthetic (warm off-white, Cormorant)
             // 'green'   — uses the original Ties green aesthetic
-            version: 'minimal',
+            version: 'green',
         },
 
     },
