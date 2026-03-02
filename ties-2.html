@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ties II — March 28</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            margin-bottom: 4rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+            opacity: 1;
+        }
+
+        .event-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            line-height: 1.15;
+        }
+
+        .event-meta {
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 0.4rem;
+            margin-bottom: 3rem;
+        }
+
+        .event-description {
+            margin-bottom: 3.5rem;
+            line-height: 1.9;
+            max-width: 480px;
+        }
+
+        /* ── Form ── */
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            background: none;
+            border: none;
+            border-bottom: 1px solid var(--rule);
+            padding: 0.4rem 0;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text);
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: var(--text);
+        }
+
+        textarea {
+            resize: none;
+            min-height: 3.5rem;
+        }
+
+        /* ── Menu ── */
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .menu-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 0.75rem;
+            height: 0.75rem;
+            border: 1px solid var(--muted);
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            top: 0.05em;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .menu-item input[type="checkbox"]:checked {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .item-name {
+            font-style: italic;
+            flex: 1;
+        }
+
+        .item-price {
+            color: var(--muted);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-top: 1px solid var(--rule);
+            padding-top: 1.1rem;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .total-amount {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text);
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        /* ── Venmo ── */
+
+        .venmo-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .venmo-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 0.75rem;
+            height: 0.75rem;
+            border: 1px solid var(--muted);
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            top: 0.35em;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .venmo-row input[type="checkbox"]:checked {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .venmo-label {
+            font-size: 1rem;
+            line-height: 1.7;
+            cursor: pointer;
+        }
+
+        /* ── Submit ── */
+
+        .submit-btn {
+            background: none;
+            border: 1px solid var(--text);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            padding: 0.7rem 2rem;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+
+        /* ── Status ── */
+
+        #form-status {
+            margin-top: 1rem;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        #form-status.error {
+            color: #b94040;
+        }
+
+        #success-msg {
+            display: none;
+            font-style: italic;
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: var(--muted);
+        }
+
+    </style>
+</head>
+<body>
+
+    <a class="back-link" href="index.html">← emmettsolomon.com</a>
+
+    <header>
+        <h1 class="event-title">Ties <em>II</em></h1>
+        <p class="event-meta">March 28 &nbsp;·&nbsp; A bakery evening</p>
+    </header>
+
+    <main>
+
+        <p class="event-description">
+            An intimate evening of food, drink, and good company.
+            Reserve your seat and let us know what you'll be having.
+        </p>
+
+        <div id="form-container">
+            <form id="rsvp-form">
+
+                <div>
+                    <label class="field-label" for="guest-name">Name</label>
+                    <input type="text" id="guest-name" required placeholder="Your name">
+                </div>
+
+                <div>
+                    <label class="field-label" for="guest-email">Email</label>
+                    <input type="email" id="guest-email" required placeholder="your@email.com">
+                </div>
+
+                <div>
+                    <label class="field-label">Your order</label>
+                    <div class="menu-items">
+
+                        <label class="menu-item">
+                            <input type="checkbox" id="harvest_special" data-price="10">
+                            <span class="item-name">Harvest Special</span>
+                            <span class="item-price">$10</span>
+                        </label>
+
+                        <label class="menu-item">
+                            <input type="checkbox" id="item_1" data-price="3">
+                            <span class="item-name">Sage Buckwheat Crepe</span>
+                            <span class="item-price">$3</span>
+                        </label>
+
+                        <label class="menu-item">
+                            <input type="checkbox" id="item_2" data-price="3">
+                            <span class="item-name">Scallion Egg Crepe</span>
+                            <span class="item-price">$3</span>
+                        </label>
+
+                        <label class="menu-item">
+                            <input type="checkbox" id="item_3" data-price="3">
+                            <span class="item-name">Cranberry Bourbon Sour</span>
+                            <span class="item-price">$3</span>
+                        </label>
+
+                        <label class="menu-item">
+                            <input type="checkbox" id="item_4" data-price="3">
+                            <span class="item-name">Mulled Wine Spritz</span>
+                            <span class="item-price">$3</span>
+                        </label>
+
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total</span>
+                        <span class="total-amount" id="total-display">$0</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="field-label" for="dietary">Dietary notes</label>
+                    <textarea id="dietary" placeholder="Any restrictions or allergies"></textarea>
+                </div>
+
+                <div class="venmo-row">
+                    <input type="checkbox" id="venmo">
+                    <label class="venmo-label" for="venmo">
+                        I'll send payment via Venmo to <em>@Demi-Lee-7</em> before the event.
+                    </label>
+                </div>
+
+                <div>
+                    <button type="submit" class="submit-btn" id="submit-btn">Reserve my seat</button>
+                    <p id="form-status"></p>
+                </div>
+
+            </form>
+        </div>
+
+        <p id="success-msg">You're in.<br>See you March 28.</p>
+
+    </main>
+
+    <script>
+
+        const priceCheckboxes = document.querySelectorAll('[data-price]');
+        const totalDisplay    = document.getElementById('total-display');
+
+        function updateTotal() {
+            let total = 0;
+            priceCheckboxes.forEach(cb => {
+                if (cb.checked) total += parseInt(cb.dataset.price, 10);
+            });
+            totalDisplay.textContent = `$${total}`;
+            return total;
+        }
+
+        priceCheckboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+
+        document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn    = document.getElementById('submit-btn');
+            const status = document.getElementById('form-status');
+            const total  = updateTotal();
+
+            btn.disabled    = true;
+            status.textContent = '';
+            status.className   = '';
+
+            const val       = id => document.getElementById(id).value.trim();
+            const isChecked = id => document.getElementById(id).checked;
+
+            const payload = {
+                name:            val('guest-name'),
+                email:           val('guest-email'),
+                harvest_special: isChecked('harvest_special'),
+                item_1:          isChecked('item_1') ? 'Sage Buckwheat Crepe'   : null,
+                item_2:          isChecked('item_2') ? 'Scallion Egg Crepe'     : null,
+                item_3:          isChecked('item_3') ? 'Cranberry Bourbon Sour' : null,
+                item_4:          isChecked('item_4') ? 'Mulled Wine Spritz'     : null,
+                dietary_notes:   val('dietary') || null,
+                venmo_confirmed: isChecked('venmo'),
+                total_cost:      total,
+            };
+
+            try {
+                const res = await fetch('/api/submit-order', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify(payload),
+                });
+
+                if (res.ok) {
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('success-msg').style.display    = 'block';
+                } else {
+                    throw new Error('bad response');
+                }
+            } catch {
+                status.textContent = 'Something went wrong. Please try again.';
+                status.className   = 'error';
+                btn.disabled       = false;
+            }
+        });
+
+    </script>
+
+</body>
+</html>

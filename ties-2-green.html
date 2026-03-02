@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ties II — March 28</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cormorant+SC:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg:         #8CA07A;
+            --text:       #F9EBD9;
+            --text-muted: rgba(249, 235, 217, 0.6);
+            --card:       #8CA07A;
+            --input-bg:   #414740;
+            --input-text: #F9EBD9;
+            --rule:       rgba(249, 235, 217, 0.25);
+            --btn-bg:     #414740;
+            --btn-text:   #F9EBD9;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 400;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 4rem 1.5rem 6rem;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .back-link {
+            display: block;
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        /* ── Page card ── */
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 3rem 2.5rem;
+            max-width: 640px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* ── Header card ── */
+
+        .header-card {
+            text-align: center;
+        }
+
+        .event-title {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .event-subtitle {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ── Description card ── */
+
+        .description-card p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        /* ── Form card ── */
+
+        .form-card {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section-heading {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── Inputs ── */
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            display: block;
+            width: 100%;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 6px;
+            padding: 0.85rem 1.1rem;
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--input-text);
+            outline: none;
+            transition: background 0.2s ease;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        textarea::placeholder {
+            color: rgba(224, 216, 204, 0.5);
+            letter-spacing: 0.06em;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            background: #4a5848;
+        }
+
+        textarea {
+            resize: none;
+            min-height: 5rem;
+        }
+
+        /* ── Menu items ── */
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .menu-item {
+            cursor: pointer;
+        }
+
+        .menu-item-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .menu-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 0.8rem;
+            height: 0.8rem;
+            border: 1.5px solid var(--text-muted);
+            border-radius: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            top: 0.05em;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .menu-item input[type="checkbox"]:checked {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .item-name {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            flex: 1;
+        }
+
+        .item-price {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .item-desc {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-left: 1.3rem;
+            line-height: 1.5;
+        }
+
+        .rule {
+            border: none;
+            border-top: 1px solid var(--rule);
+            margin: 0.5rem 0;
+        }
+
+        .dessert-note {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 0.5rem 0;
+        }
+
+        /* ── Total ── */
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 0.5rem;
+        }
+
+        .total-label {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+
+        .total-amount {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        /* ── Venmo ── */
+
+        .venmo-text {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        .venmo-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .radio-row {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            background: var(--input-bg);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+        }
+
+        .radio-row input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border: 1.5px solid var(--input-text);
+            border-radius: 50%;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            position: relative;
+        }
+
+        .radio-row input[type="radio"]:checked {
+            background: var(--input-text);
+        }
+
+        .radio-label {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--input-text);
+        }
+
+        /* ── Submit ── */
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 6px;
+            color: var(--btn-text);
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            padding: 0.9rem 2rem;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            opacity: 0.85;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        /* ── Status / Success ── */
+
+        #form-status {
+            margin-top: 0.75rem;
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        #form-status.error {
+            color: #7a3030;
+        }
+
+        #success-msg {
+            display: none;
+            text-align: center;
+        }
+
+        #success-msg p {
+            font-family: 'Cormorant SC', Georgia, serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+    </style>
+</head>
+<body>
+
+    <a class="back-link" href="index.html">← Emmett Solomon</a>
+
+    <div class="card header-card">
+        <h1 class="event-title">Ties II</h1>
+        <p class="event-subtitle">March 28 &nbsp;·&nbsp; A Bakery Evening</p>
+    </div>
+
+    <div class="card description-card">
+        <p>
+            An intimate evening of food, drink, and good company.
+            Use this form to place your order — we hope you'll join us.
+        </p>
+    </div>
+
+    <div id="form-container">
+        <div class="card form-card">
+            <form id="rsvp-form">
+
+                <div>
+                    <p class="section-heading">Your Name</p>
+                    <input type="text" id="guest-name" required placeholder="Enter Your Name">
+                </div>
+
+                <div>
+                    <p class="section-heading">Email</p>
+                    <input type="email" id="guest-email" required placeholder="Your@Email.Com">
+                </div>
+
+                <div>
+                    <p class="section-heading">Your Order</p>
+                    <div class="menu-items">
+
+                        <label class="menu-item">
+                            <div class="menu-item-header">
+                                <input type="checkbox" id="harvest_special" data-price="10">
+                                <span class="item-name">Harvest Special</span>
+                                <span class="item-price">$10</span>
+                            </div>
+                            <p class="item-desc">2 drinks, 1 Sage Buckwheat Crepe, 1 Scallion Egg Crepe</p>
+                        </label>
+
+                        <label class="menu-item">
+                            <div class="menu-item-header">
+                                <input type="checkbox" id="item_1" data-price="3">
+                                <span class="item-name">Sage Buckwheat Crepe</span>
+                                <span class="item-price">$3</span>
+                            </div>
+                            <p class="item-desc">Braised Short Rib, Autumn Pesto, Crispy Shallots</p>
+                        </label>
+
+                        <label class="menu-item">
+                            <div class="menu-item-header">
+                                <input type="checkbox" id="item_2" data-price="3">
+                                <span class="item-name">Scallion Egg Crepe</span>
+                                <span class="item-price">$3</span>
+                            </div>
+                            <p class="item-desc">Frizzled Mushrooms, Maple Ponzu, Blistered Shishitos</p>
+                        </label>
+
+                        <label class="menu-item">
+                            <div class="menu-item-header">
+                                <input type="checkbox" id="item_3" data-price="3">
+                                <span class="item-name">Cranberry Bourbon Sour</span>
+                                <span class="item-price">$3</span>
+                            </div>
+                            <p class="item-desc">Bourbon, Cranberry Honeycomb, Blood Orange, Candied Rosemary</p>
+                        </label>
+
+                        <label class="menu-item">
+                            <div class="menu-item-header">
+                                <input type="checkbox" id="item_4" data-price="3">
+                                <span class="item-name">Mulled Wine Spritz</span>
+                                <span class="item-price">$3</span>
+                            </div>
+                            <p class="item-desc">Malbec, House Spice Blend, Frost Peach, Cinnamon Bark</p>
+                        </label>
+
+                    </div>
+
+                    <hr class="rule" style="margin: 1.25rem 0 0.75rem;">
+                    <p class="dessert-note">Dessert, naturally, is Complimentary</p>
+                    <hr class="rule" style="margin: 0.75rem 0 0.75rem;">
+
+                    <div class="total-row">
+                        <span class="total-label">Total</span>
+                        <span class="total-amount" id="total-display">$0</span>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="section-heading">Dietary Restrictions, Allergies, or Questions?</p>
+                    <textarea id="dietary" placeholder="Type Your Answer Here..."></textarea>
+                </div>
+
+                <div>
+                    <p class="venmo-text">
+                        Please Venmo (@Demi-Lee-7) to confirm your order.
+                        Once completed, please select "yes" below.
+                    </p>
+                    <div class="venmo-options">
+                        <label class="radio-row">
+                            <input type="radio" name="venmo" id="venmo-yes" value="yes">
+                            <span class="radio-label">Yes</span>
+                        </label>
+                        <label class="radio-row">
+                            <input type="radio" name="venmo" id="venmo-no" value="no">
+                            <span class="radio-label">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="submit-btn" id="submit-btn">Place Order</button>
+                    <p id="form-status"></p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="success-msg" class="card">
+        <p>Thank You!<br>We Are Excited To See You Soon!</p>
+    </div>
+
+    <script>
+
+        const priceCheckboxes = document.querySelectorAll('[data-price]');
+        const totalDisplay    = document.getElementById('total-display');
+
+        function updateTotal() {
+            let total = 0;
+            priceCheckboxes.forEach(cb => {
+                if (cb.checked) total += parseInt(cb.dataset.price, 10);
+            });
+            totalDisplay.textContent = `$${total}`;
+            return total;
+        }
+
+        priceCheckboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+
+        document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn    = document.getElementById('submit-btn');
+            const status = document.getElementById('form-status');
+            const total  = updateTotal();
+
+            btn.disabled       = true;
+            status.textContent = '';
+            status.className   = '';
+
+            const val       = id => document.getElementById(id).value.trim();
+            const isChecked = id => document.getElementById(id).checked;
+
+            const payload = {
+                name:            val('guest-name'),
+                email:           val('guest-email'),
+                harvest_special: isChecked('harvest_special'),
+                item_1:          isChecked('item_1') ? 'Sage Buckwheat Crepe'   : null,
+                item_2:          isChecked('item_2') ? 'Scallion Egg Crepe'     : null,
+                item_3:          isChecked('item_3') ? 'Cranberry Bourbon Sour' : null,
+                item_4:          isChecked('item_4') ? 'Mulled Wine Spritz'     : null,
+                dietary_notes:   val('dietary') || null,
+                venmo_confirmed: isChecked('venmo-yes'),
+                total_cost:      total,
+            };
+
+            try {
+                const res = await fetch('/api/submit-order', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify(payload),
+                });
+
+                if (res.ok) {
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('success-msg').style.display    = 'block';
+                } else {
+                    throw new Error('bad response');
+                }
+            } catch {
+                status.textContent = 'Something went wrong. Please try again.';
+                status.className   = 'error';
+                btn.disabled       = false;
+            }
+        });
+
+    </script>
+
+</body>
+</html>

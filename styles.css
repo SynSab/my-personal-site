@@ -1,41 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --bg:     #f8f5f0;
+    --text:   #1a1a18;
+    --muted:  #9a9690;
+    --accent: #7a8f72;
+    --rule:   #e8e3dc;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    max-width: 800px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 1.2rem;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 6rem 2rem 8rem;
 }
 
 header {
-    margin-bottom: 3rem;
+    margin-bottom: 5rem;
 }
 
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
 }
 
-h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #555;
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.4s ease, opacity 0.4s ease;
 }
 
-section {
-    margin-bottom: 2rem;
+a:hover {
+    color: var(--accent);
+    opacity: 0.8;
 }
 
-footer {
-    margin-top: 4rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-    color: #888;
-    font-size: 0.9rem;
+
+/* ─── Intro / Flow ────────────────────────────────── */
+
+.flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.fragment {
+    font-size: 1.75rem;
+    font-weight: 300;
+    line-height: 2.2;
+    white-space: nowrap;
+}
+
+
+/* ─── Picker ──────────────────────────────────────── */
+
+.picker {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    vertical-align: baseline;
+}
+
+.picker.locked {
+    cursor: default;
+}
+
+.picker:hover .word.visible {
+    opacity: 0.6;
+}
+
+.picker-ghost {
+    /* reserves width of longest word so layout never shifts */
+    visibility: hidden;
+    pointer-events: none;
+    font-style: italic;
+}
+
+.word {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-style: italic;
+    white-space: nowrap;
+    opacity: 0;
+    /* words wait above the slot */
+    transform: translateY(-1.2em);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.word.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.word.exiting {
+    opacity: 0;
+    /* words fall through the bottom */
+    transform: translateY(1.2em);
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.3s ease;
+}
+
+.word.selected {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: none;
+    transition: none;
+}
+
+
+/* ─── Settling animations ────────────────────────── */
+
+@keyframes word-bounce {
+    0%   { transform: translateY(-1.2em); opacity: 0;   animation-timing-function: ease-in; }
+    52%  { transform: translateY(0);       opacity: 1;   animation-timing-function: ease-out; }
+    78%  { transform: translateY(-0.4em);  opacity: 1;   animation-timing-function: ease-in; }
+    90%  { transform: translateY(0.06em);  opacity: 1;   animation-timing-function: ease-out; }
+    100% { transform: translateY(0);       opacity: 1; }
+}
+
+@keyframes word-overshoot {
+    0%   { transform: translateY(-1.2em); opacity: 0;   animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); }
+    65%  { transform: translateY(0.28em); opacity: 1;   animation-timing-function: ease-out; }
+    100% { transform: translateY(0);      opacity: 1; }
+}
+
+
+/* ─── Branch (horizontal reveal) ─────────────────── */
+
+.branch {
+    display: none;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    /* max-width expands first, then text fades in slightly after */
+    transition: max-width 0.65s ease, opacity 0.5s 0.2s ease;
+    white-space: nowrap;
+}
+
+.branch.revealed {
+    max-width: 700px;
+    opacity: 1;
 }
