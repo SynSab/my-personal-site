@@ -163,3 +163,100 @@ a:hover {
     max-width: 700px;
     opacity: 1;
 }
+
+
+/* ─── Linework ────────────────────────────────────── */
+/* The house sits on the bottom edge of the viewport like a horizon, and
+   draws itself once on load. Regenerate the SVG in index.html with:
+   python3 tools/linework.py "<file>.3dm" -o _preview/house.svg           */
+
+.linework-bed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+    /* stroke and opacity live here so the label and the house are one ink */
+    stroke: var(--text);
+    opacity: 0.3;
+}
+
+.linework {
+    width: 100%;
+    max-width: 1500px;
+    height: auto;
+    /* Ceiling as well as a width, or a wide short screen gets a house that
+       eats the page. The SVG centres itself inside whatever box is left. */
+    max-height: 38vh;
+}
+
+/* The place name, written once the house has finished drawing. */
+.linework-label {
+    width: clamp(100px, 13vw, 180px);
+    height: auto;
+    margin-bottom: 0.9rem;
+}
+
+.linework-bed .ln {
+    stroke-width: var(--w);
+    stroke-dasharray: var(--l);
+    stroke-dashoffset: var(--l);
+    animation: ln-draw var(--d) linear var(--t) forwards;
+}
+
+@keyframes ln-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Kindness clause: no animation, no penalty — the drawing is simply there. */
+@media (prefers-reduced-motion: reduce) {
+    .linework-bed .ln {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Short viewports (a phone turned sideways) have no room for both a
+   full-height header and a 38vh house — the text lands on the roof. */
+@media (max-height: 560px) {
+    body {
+        padding-top: 3rem;
+        padding-bottom: 4rem;
+    }
+    .linework {
+        max-height: 24vh;
+    }
+    .linework-label {
+        width: clamp(80px, 10vw, 120px);
+        margin-bottom: 0.4rem;
+    }
+}
+
+/* Very short landscape (an older phone on its side) needs one more notch. */
+@media (max-height: 430px) {
+    body {
+        padding-top: 2rem;
+    }
+    .linework {
+        max-height: 20vh;
+    }
+    .linework-label {
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Below this there is genuinely no room for a captioned drawing. The house
+   stays as a horizon; the place name steps aside rather than crowd the text. */
+@media (max-height: 340px) {
+    .linework-label {
+        display: none;
+    }
+    .linework {
+        max-height: 18vh;
+    }
+}
