@@ -109,8 +109,8 @@ const CONFIG = {
     //  LOGIN REVEAL
     // ══════════════════════════════════════════════════════════════════
     // "Solomon" in the heading rearranges itself into "login" (login.js).
-    // Nothing starts it yet: it plays only when something calls
-    // LoginReveal.play().
+    // A click on any plant in front of the house starts it (plants.js);
+    // a second click puts the name back.
 
     login: {
 
@@ -126,6 +126,32 @@ const CONFIG = {
         // here, e.g.  beats: { hop: [0.60, 0.90] }.  The full table, with
         // what each beat does, is at the top of login.js.
         beats: {},
+
+    },
+
+
+    // ══════════════════════════════════════════════════════════════════
+    //  PLANTS
+    // ══════════════════════════════════════════════════════════════════
+    // The beds in front of the house. They grow once the house is drawn,
+    // and a click on any plant plays the login reveal above (plants.js).
+
+    plants: {
+
+        // 'house' — the same ink as the house
+        // 'green' — sage green
+        // 'beige' — warm beige
+        colour: 'house',
+
+        // 'regular' — the same line weight as the house
+        // 'thin'    — a finer line, so the leaves do not clot together
+        line: 'thin',
+
+        // How a plant shows it can be clicked.
+        // 'quiet'  — only the cursor changes
+        // 'ink'    — the plant under the cursor darkens (on a phone, when tapped)
+        // 'rustle' — as 'ink', and now and then one plant sways
+        hint: 'ink',
 
     },
 

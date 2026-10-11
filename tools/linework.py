@@ -8,9 +8,14 @@ strokes draw themselves with stroke-dashoffset, as if by hand.
 
   .3dm needs rhino3dm:  pip install rhino3dm
 
+Curves on the plants layer (default "Plants by Claude") are not drawn by the
+pen. They grow after the house is finished, every stroke from the ground up,
+in a second SVG laid over the first so that a plant can be clicked.
+
 Usage:
   python3 tools/linework.py FILE.3dm -o house.svg --preview
   python3 tools/linework.py FILE.3dm --duration 14 --amp 0.004 --order wave
+  python3 tools/linework.py FILE.3dm --only outlines --inject index.html --plants-only
 """
 
 import argparse, math, os, random, sys
@@ -315,11 +320,150 @@ def build(items, duration=20.0, seed=7, amp_ratio=0.003, overlap=0.55,
            'xmlns="http://www.w3.org/2000/svg" aria-hidden="true" '
            'stroke-linecap="round" stroke-linejoin="round">\n'
            + "\n".join(parts) + "\n</svg>")
-    return svg, dict(n=len(ordered), ink=total, w=w, h=h, runtime=runtime)
+    return svg, dict(n=len(ordered), ink=total, w=w, h=h, runtime=runtime,
+                     frame=(minx, maxy), scale=scale, viewbox=vb)
+
+
+# ── plants ─────────────────────────────────────────────────────────────────
+
+def read_plants(path, layer):
+    """Plant curves from one layer, sampled span by span so leaf tips stay sharp."""
+    import rhino3dm
+    f = rhino3dm.File3dm.Read(path)
+    layers = {i: f.Layers[i].Name.strip().lower() for i in range(len(f.Layers))}
+    out = []
+    for ob in f.Objects:
+        if layers.get(ob.Attributes.LayerIndex) != layer:
+            continue
+        g = ob.Geometry
+        if not hasattr(g, "PointAt"):
+            continue
+        nc = g if isinstance(g, rhino3dm.NurbsCurve) else g.ToNurbsCurve()
+        d = nc.Domain
+        ks = sorted({round(nc.Knots[i], 9) for i in range(len(nc.Knots))})
+        ks = [k for k in ks if d.T0 - 1e-9 <= k <= d.T1 + 1e-9]
+        pts = []
+        for a, b in zip(ks, ks[1:]):
+            for k in range(10):
+                p = nc.PointAt(a + (b - a) * k / 10)
+                pts.append((p.X, p.Y))
+        p = nc.PointAt(ks[-1])
+        pts.append((p.X, p.Y))
+        out.append(pts)
+    return out
+
+
+def strokes_upward(pts, ground, turn):
+    """Cut a plant's single line at each real turn, and point every piece up."""
+    hgt = [ground - y for _, y in pts]
+    cuts, ext, direction = [0], 0, 0
+    for i in range(1, len(pts)):
+        if direction >= 0 and hgt[i] > hgt[ext] or direction <= 0 and hgt[i] < hgt[ext]:
+            if direction == 0 and abs(hgt[i] - hgt[0]) > turn:
+                direction = 1 if hgt[i] > hgt[0] else -1
+            if direction != 0 or abs(hgt[i] - hgt[0]) > abs(hgt[ext] - hgt[0]):
+                ext = i
+        elif direction and abs(hgt[i] - hgt[ext]) > turn:
+            cuts.append(ext)
+            direction, ext = -direction, i
+    cuts.append(len(pts) - 1)
+    out = []
+    for a, b in zip(cuts, cuts[1:]):
+        if b > a:
+            piece = pts[a:b + 1]
+            if hgt[b] < hgt[a]:
+                piece = piece[::-1]
+            out.append(piece)
+    return out
+
+
+def num(v):
+    """A count of hundredths as the shortest SVG number."""
+    t = f"{abs(v) // 100}.{abs(v) % 100:02d}".rstrip("0").rstrip(".")
+    if t.startswith("0."):
+        t = t[1:]
+    return ("-" if v < 0 else "") + (t or "0")
+
+
+def to_d_rel(p):
+    """to_d, written as relative steps: about half the bytes for fine detail."""
+    q = [(round(x * 100), round(y * 100)) for x, y in p]
+    out, first = ["M" + num(q[0][0]) + " " + num(q[0][1]), "l"], True
+    for a, b in zip(q, q[1:]):
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        if dx == 0 and dy == 0:
+            continue
+        sx, sy = num(dx), num(dy)
+        out.append(("" if first or sx.startswith("-") else " ") + sx
+                   + ("" if sy.startswith("-") else " ") + sy)
+        first = False
+    return "".join(out)
+
+
+def build_plants(plants, frame, scale, viewbox, start, grow=3.4, seed=11,
+                 width=0.0016, turn=0.14, simplify=0.0003):
+    """Plants in the house's own frame, each stroke growing from low to high."""
+    minx, maxy = frame
+    plants = [[(x - minx, maxy - y) for x, y in pts] for pts in plants]
+    plants.sort(key=lambda p: min(q[0] for q in p))
+    ground = max(q[1] for p in plants for q in p)
+    tallest = max(ground - q[1] for p in plants for q in p)
+    speed = tallest / grow                   # one rate of growth for the whole bed
+
+    # beds: runs of plants with no big gap between them
+    spans = [(min(q[0] for q in p), max(q[0] for q in p)) for p in plants]
+    beds, cur = [], [0]
+    for i in range(1, len(plants)):
+        if spans[i][0] - spans[i - 1][1] > scale * 0.04:
+            beds.append(cur); cur = []
+        cur.append(i)
+    beds.append(cur)
+
+    rng = random.Random(seed)
+    groups, n, end = [], 0, start
+    for bed in beds:
+        for j, i in enumerate(bed):
+            pts = plants[i]
+            # each plant's click area runs halfway to its neighbours
+            left = spans[i][0] - 0.2 if j == 0 else (spans[bed[j - 1]][1] + spans[i][0]) / 2
+            right = spans[i][1] + 0.2 if j == len(bed) - 1 else (spans[i][1] + spans[bed[j + 1]][0]) / 2
+            foot = [q[0] for q in pts if ground - q[1] < 0.05] or [q[0] for q in pts]
+            lag, pace = rng.uniform(0, 0.35), rng.uniform(0.88, 1.12)
+            z = lambda v: f"{v:.2f}".lstrip("0")
+            parts = []
+            for piece in strokes_upward(pts, ground, turn):
+                piece = rdp(piece, scale * simplify)
+                L = plen(piece)
+                if L < 0.03:
+                    continue
+                lo = ground - max(q[1] for q in piece)
+                hi = ground - min(q[1] for q in piece)
+                t = start + lag + lo / (speed * pace)
+                d = max((hi - lo) / (speed * pace), 0.14)
+                end = max(end, t + d)
+                parts.append(f'<path style="--l:{z(L)};--d:{z(d)}s;--t:{t:.2f}s" d="{to_d_rel(piece)}"/>')
+            n += len(parts)
+            wv = width * scale * (1 + rng.uniform(-0.12, 0.12))
+            # .hit is the pointer target; .hit-touch is a taller one for fingers
+            hit = (f'<rect class="hit" x="{left:.2f}" y="{ground - 1.95:.2f}" '
+                   f'width="{right - left:.2f}" height="2.35"/>'
+                   f'<rect class="hit hit-touch" x="{left:.2f}" y="{ground - 3.6:.2f}" '
+                   f'width="{right - left:.2f}" height="4"/>')
+            groups.append(f'<g class="plant" style="transform-origin:{sum(foot)/len(foot):.2f}px '
+                          f'{ground:.2f}px;--r:{rng.uniform(0, 9):.1f}s;--w:{wv:.3f}">\n{hit}\n'
+                          + "\n".join(parts) + "\n</g>")
+
+    svg = ('<svg class="linework plants" viewBox="' + viewbox + '" fill="none" '
+           'xmlns="http://www.w3.org/2000/svg" aria-hidden="true" '
+           'stroke-linecap="round" stroke-linejoin="round">\n'
+           + "\n".join(groups) + "\n</svg>")
+    return svg, dict(plants=len(plants), n=n, end=end)
 
 
 START = "<!-- linework:start — generated by tools/linework.py, do not hand-edit -->"
 END   = "<!-- linework:end -->"
+P_START = "<!-- plants:start — generated by tools/linework.py, do not hand-edit -->"
+P_END   = "<!-- plants:end -->"
 
 def build_label(text, style="hand", start=0.0, duration=2.6, seed=11,
                 amp_ratio=0.0035, overlap=0.20, width=0.0131, pad=0.10):
@@ -369,7 +513,17 @@ CSS = """.linework-bed .ln{
 @keyframes ln-draw{ to{ stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce){
   .linework-bed .ln{ animation: none; stroke-dashoffset: 0; }
-}"""
+}
+.plants-bed{ position:fixed; left:0; right:0; bottom:0; }
+.plants-bed .plant{ opacity: .3; }
+.plants-bed .plant path{
+  stroke-width: calc(var(--w) * .6);
+  stroke-dasharray: var(--l);
+  stroke-dashoffset: var(--l);
+  visibility: hidden;
+  animation: plant-grow var(--d) linear var(--t) forwards;
+}
+@keyframes plant-grow{ from{ visibility: visible; } to{ visibility: visible; stroke-dashoffset: 0; } }"""
 
 
 def main():
@@ -398,6 +552,15 @@ def main():
                     help="seconds to write the label; defaults to 30%% of --duration")
     ap.add_argument("--label-gap", type=float, default=0.6,
                     help="seconds between the house finishing and the word starting")
+    ap.add_argument("--plants-layer", default="plants by claude",
+                    help="layer whose curves grow from the ground once the house is drawn")
+    ap.add_argument("--plants-gap", type=float, default=0.3,
+                    help="seconds between the house finishing and the plants starting")
+    ap.add_argument("--plants-only", action="store_true",
+                    help="with --inject: leave the drawing already in the page as it is "
+                         "and write only the plants")
+    ap.add_argument("--plants-time", type=float, default=3.4,
+                    help="seconds for the tallest plant to reach full height")
     ap.add_argument("--preview", action="store_true")
     a = ap.parse_args()
 
@@ -405,9 +568,13 @@ def main():
     if ext == ".3dm":
         skip = {x.strip().lower() for x in a.skip.split(",") if x.strip()}
         only = {x.strip().lower() for x in a.only.split(",") if x.strip()} or None
+        plant_layer = a.plants_layer.strip().lower()
+        skip.add(plant_layer)                # the pen never draws the plants
         items = read_3dm(a.input, skip_layers=skip, only_layers=only)
+        plants = read_plants(a.input, plant_layer) if plant_layer else []
     else:
         items = read_ai(a.input)
+        plants = []
     if not items:
         sys.exit("No linework found in that file.")
     src_n = len(items)
@@ -424,7 +591,15 @@ def main():
             a.label, a.label_style, start=st["runtime"] + a.label_gap,
             duration=label_dur)
 
+    plants_svg = ""
+    if plants:
+        plants_svg, pst = build_plants(plants, st["frame"], st["scale"], st["viewbox"],
+                                       start=st["runtime"] + a.plants_gap,
+                                       grow=a.plants_time, width=a.width)
+
     out = a.out or os.path.splitext(os.path.basename(a.input))[0] + ".svg"
+    if a.plants_only and not (a.inject and plants):
+        sys.exit("--plants-only needs --inject and a plants layer with curves on it.")
     open(out, "w").write(svg)
     print(f"{src_n} source curves -> {st['n']} strokes")
     print(f"aspect {st['w']/st['h']:.2f}:1   runtime ~{st['runtime']:.1f}s   "
@@ -432,6 +607,9 @@ def main():
     if a.label:
         print(f"label {a.label!r} ({a.label_style}) writes "
               f"{st['runtime'] + a.label_gap:.1f}s -> {label_end:.1f}s")
+    if plants:
+        print(f"{pst['plants']} plants -> {pst['n']} strokes ({len(plants_svg)/1024:.1f} KB) grow "
+              f"{st['runtime'] + a.plants_gap:.1f}s -> {pst['end']:.1f}s")
 
     if a.inject:
         import re as _re
@@ -439,11 +617,25 @@ def main():
         inner = (label_svg + "\n" + svg) if label_svg else svg
         block = (START + "\n    <div class=\"linework-bed\">\n" + inner
                  + "\n    </div>\n    " + END)
-        if START in html and END in html:
+        if a.plants_only:
+            m = _re.search(r'<svg class="linework" viewBox="([^"]+)"', html)
+            if not m or m.group(1) != st["viewbox"]:
+                sys.exit("The drawing in that page has a different frame from this file; "
+                         "the plants would not line up. Run without --plants-only.")
+        elif START in html and END in html:
             html = _re.sub(_re.escape(START) + r".*?" + _re.escape(END),
                            lambda _m: block, html, flags=_re.S)
         else:
             html = html.replace("\n    <script", "\n    " + block + "\n\n    <script", 1)
+        if plants_svg:
+            # a second bed over the page: the first sits behind it and ignores clicks
+            pblock = (P_START + "\n    <div class=\"linework-bed plants-bed\">\n" + plants_svg
+                      + "\n    </div>\n    " + P_END)
+            if P_START in html and P_END in html:
+                html = _re.sub(_re.escape(P_START) + r".*?" + _re.escape(P_END),
+                               lambda _m: pblock, html, flags=_re.S)
+            else:
+                html = html.replace(END, END + "\n\n    " + pblock, 1)
         open(a.inject, "w").write(html)
         print(f"injected into {a.inject}")
 
@@ -462,6 +654,7 @@ font:400 .8rem/1 system-ui;padding:.55rem 1.1rem;border:1px solid #d8d2c8;
 border-radius:2rem;background:#fffdf9;color:#6b6862;cursor:pointer;}}
 </style>
 <div class="linework-bed">{label_svg}{svg}</div>
+<div class="linework-bed plants-bed">{plants_svg}</div>
 <button onclick="document.querySelectorAll('svg').forEach(s=>s.replaceWith(s.cloneNode(true)))">replay</button>
 """)
         print(f"wrote {p}")

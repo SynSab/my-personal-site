@@ -238,6 +238,98 @@ a:hover {
     }
 }
 
+/* ─── Plants ──────────────────────────────────────── */
+/* The beds in front of the house. They grow from the ground once the house
+   is drawn, and a click on any of them plays the login reveal (plants.js).
+   Colour, line and hint are dials in config.js under `plants`; plants.js
+   copies them onto .plants-bed as data-colour, data-line and data-hint.
+   Regenerate the SVG in index.html with:
+   python3 tools/linework.py "<file>.3dm" --only outlines --inject index.html --plants-only */
+
+.plants-bed {
+    z-index: 0;              /* above the page, so a plant can be clicked */
+    opacity: 1;              /* each plant sets its own strength below */
+}
+
+.plants-bed .plants {
+    overflow: visible;
+}
+
+.plants-bed .plant {
+    stroke: var(--plant-ink, var(--text));
+    opacity: var(--plant-strength, 0.3);
+    transition: opacity 0.25s ease, stroke 0.25s ease;
+}
+
+.plants-bed .plant path {
+    stroke-width: calc(var(--w) * var(--plant-weight, 1));
+    stroke-dasharray: var(--l);
+    stroke-dashoffset: var(--l);
+    visibility: hidden;      /* nothing shows at the ground before it grows */
+    animation: plant-grow var(--d) linear var(--t) forwards;
+}
+
+@keyframes plant-grow {
+    from { visibility: visible; }
+    to   { visibility: visible; stroke-dashoffset: 0; }
+}
+
+/* The click target is a plain rectangle around each plant, and a taller one
+   for fingers, since on a phone a plant is only a few pixels high. */
+.plants-bed .hit {
+    pointer-events: all;
+    cursor: pointer;
+    stroke: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.plants-bed .hit-touch {
+    pointer-events: none;
+}
+
+@media (pointer: coarse) {
+    .plants-bed .hit-touch {
+        pointer-events: all;
+    }
+}
+
+/* colour */
+.plants-bed[data-colour="green"] { --plant-ink: #7a8f72; --plant-strength: 0.8;  --plant-ink-up: #4d6645; }
+.plants-bed[data-colour="beige"] { --plant-ink: #b3a182; --plant-strength: 0.85; --plant-ink-up: #7d6b4c; }
+
+/* line */
+.plants-bed[data-line="thin"] { --plant-weight: 0.6; }
+
+/* hint: 'quiet' adds nothing beyond the cursor */
+.plants-bed[data-hint="ink"] .plant:hover,
+.plants-bed[data-hint="ink"] .plant.tapped,
+.plants-bed[data-hint="rustle"] .plant:hover,
+.plants-bed[data-hint="rustle"] .plant.tapped {
+    opacity: 1;
+    stroke: var(--plant-ink-up, var(--text));
+}
+
+.plants-bed[data-hint="rustle"] .plant {
+    animation: plant-rustle 9s ease-in-out calc(25s + var(--r)) infinite;
+}
+
+@keyframes plant-rustle {
+    0%, 82%, 100% { transform: rotate(0deg); }
+    87%           { transform: rotate(2.2deg); }
+    93%           { transform: rotate(-1.4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .plants-bed .plant path {
+        animation: none;
+        stroke-dashoffset: 0;
+        visibility: visible;
+    }
+    .plants-bed[data-hint="rustle"] .plant {
+        animation: none;
+    }
+}
+
 /* Short viewports (a phone turned sideways) have no room for both a
    full-height header and a 38vh house — the text lands on the roof. */
 @media (max-height: 560px) {

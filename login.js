@@ -7,8 +7,8 @@
 //
 //     LoginReveal.play()
 //
-// which is the whole job of whatever trigger is added later (a click on
-// part of the house drawing, say). LoginReveal.reset() puts the name back.
+// which plants.js does when a plant in front of the house is clicked.
+// LoginReveal.reset() puts the name back.
 //
 // Nothing is swapped for anything else. The two letters that change are
 // the real glyphs of the heading font, drawn in SVG and shown through a
