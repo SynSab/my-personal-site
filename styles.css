@@ -69,81 +69,98 @@ a:hover {
 }
 
 
-/* ─── Picker ──────────────────────────────────────── */
+/* ─── Picker (the word wheel) ─────────────────────── */
+/*
+   A strip of words turning behind a window one word tall.
+
+   The window is absolutely positioned and contributes nothing to layout.
+   Underneath it the hidden ghost holds the width of the longest word AND
+   the baseline of the sentence — an inline-block that clips its own
+   overflow reports its bottom edge as its baseline, which would drop the
+   rest of the line by several pixels. Keeping the clip off the element
+   that sits in the text flow is what makes the wheel invisible.
+
+   Row height is set in em, so the window and the word spacing scale with
+   the type at every viewport. Both dials live in config.js.
+*/
 
 .picker {
     display: inline-block;
     position: relative;
     cursor: pointer;
     vertical-align: baseline;
+    --row:  1.5em;
+    --fade: 0.14em;
 }
 
 .picker.locked {
     cursor: default;
 }
 
-.picker:hover .word.visible {
+.picker:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 0.3em;
+}
+
+/* The only hint that this is a control at all. */
+.picker:not(.locked):hover .picker-strip {
     opacity: 0.6;
 }
 
 .picker-ghost {
-    /* reserves width of longest word so layout never shifts */
+    /* reserves the width of the longest word, and sets the baseline */
     visibility: hidden;
     pointer-events: none;
     font-style: italic;
+    white-space: nowrap;
 }
 
-.word {
+.picker-window {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--row);
+    margin-top: calc(var(--row) / -2);
+    overflow: hidden;
+    /* the words fade out at the crop rather than ending on a hard line */
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0, #000 var(--fade),
+        #000 calc(100% - var(--fade)), transparent 100%);
+            mask-image: linear-gradient(to bottom,
+        transparent 0, #000 var(--fade),
+        #000 calc(100% - var(--fade)), transparent 100%);
+}
+
+.picker-strip {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
+    will-change: transform;
+    transition: opacity 0.4s ease;
+}
+
+.word {
+    display: block;
     font-style: italic;
     white-space: nowrap;
-    opacity: 0;
-    /* words wait above the slot */
-    transform: translateY(-1.2em);
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                opacity 0.3s ease;
-    pointer-events: none;
+    line-height: var(--row);
+    height: var(--row);
 }
 
-.word.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+/* Before script.js runs — or if it never does — the first word simply
+   sits in the slot. The ghost is already holding the space, so there is
+   nothing to shift when the wheel takes over. */
+.picker:not(.ready) .word {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: calc(var(--row) / -2);
 }
 
-.word.exiting {
-    opacity: 0;
-    /* words fall through the bottom */
-    transform: translateY(1.2em);
-    pointer-events: none;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                opacity 0.3s ease;
-}
-
-.word.selected {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: none;
-    transition: none;
-}
-
-
-/* ─── Settling animations ────────────────────────── */
-
-@keyframes word-bounce {
-    0%   { transform: translateY(-1.2em); opacity: 0;   animation-timing-function: ease-in; }
-    52%  { transform: translateY(0);       opacity: 1;   animation-timing-function: ease-out; }
-    78%  { transform: translateY(-0.4em);  opacity: 1;   animation-timing-function: ease-in; }
-    90%  { transform: translateY(0.06em);  opacity: 1;   animation-timing-function: ease-out; }
-    100% { transform: translateY(0);       opacity: 1; }
-}
-
-@keyframes word-overshoot {
-    0%   { transform: translateY(-1.2em); opacity: 0;   animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); }
-    65%  { transform: translateY(0.28em); opacity: 1;   animation-timing-function: ease-out; }
-    100% { transform: translateY(0);      opacity: 1; }
+.picker:not(.ready) .word:not(:first-of-type) {
+    display: none;
 }
 
 
