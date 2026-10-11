@@ -221,8 +221,12 @@ a:hover {
 
 .linework-bed .ln {
     stroke-width: var(--w);
-    stroke-dasharray: var(--l);
-    stroke-dashoffset: var(--l);
+    /* --l is rounded, so it can fall a hair short of the true length. The
+       dash is padded past the end and followed by a gap no stroke can
+       outrun; otherwise the pattern repeats at the stroke's tail and the
+       round cap shows as a dot before the pen gets there. */
+    stroke-dasharray: calc(var(--l) + 0.1) 1000;
+    stroke-dashoffset: calc(var(--l) + 0.1);
     animation: ln-draw var(--d) linear var(--t) forwards;
 }
 
