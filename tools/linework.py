@@ -362,10 +362,8 @@ def build_label(text, style="hand", start=0.0, duration=2.6, seed=11,
 
 CSS = """.linework-bed .ln{
   stroke-width: var(--w);
-  /* --l is rounded: pad the dash and follow it with a gap no stroke can
-     outrun, or the round cap shows as a dot at the stroke's tail */
-  stroke-dasharray: calc(var(--l) + 0.1) 1000;
-  stroke-dashoffset: calc(var(--l) + 0.1);
+  stroke-dasharray: var(--l);
+  stroke-dashoffset: var(--l);
   animation: ln-draw var(--d) linear var(--t) forwards;
 }
 @keyframes ln-draw{ to{ stroke-dashoffset: 0; } }
