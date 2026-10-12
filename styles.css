@@ -305,20 +305,26 @@ a:hover {
 }
 
 /* The click target is a plain rectangle around each plant, and a taller one
-   for fingers, since on a phone a plant is only a few pixels high. */
+   for fingers, since on a phone a plant is only a few pixels high.
+   It is switched off until the plant starts to grow: plants.js adds .live
+   to a plant when its first stroke begins. */
 .plants-bed .hit {
-    pointer-events: all;
+    pointer-events: none;
     cursor: pointer;
     stroke: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-.plants-bed .hit-touch {
+.plants-bed .plant.live .hit {
+    pointer-events: all;
+}
+
+.plants-bed .plant.live .hit-touch {
     pointer-events: none;
 }
 
 @media (pointer: coarse) {
-    .plants-bed .hit-touch {
+    .plants-bed .plant.live .hit-touch {
         pointer-events: all;
     }
 }
