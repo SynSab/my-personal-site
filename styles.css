@@ -198,7 +198,7 @@ a:hover {
     align-items: center;
     justify-content: flex-end;
     pointer-events: none;
-    /* stroke and opacity live here so the label and the house are one ink */
+    /* stroke and opacity live here so every line in the bed is one ink */
     stroke: var(--text);
     opacity: 0.3;
 }
@@ -210,13 +210,6 @@ a:hover {
     /* Ceiling as well as a width, or a wide short screen gets a house that
        eats the page. The SVG centres itself inside whatever box is left. */
     max-height: 38vh;
-}
-
-/* The place name, written once the house has finished drawing. */
-.linework-label {
-    width: clamp(100px, 13vw, 180px);
-    height: auto;
-    margin-bottom: 0.9rem;
 }
 
 .linework-bed .ln {
@@ -340,10 +333,6 @@ a:hover {
     .linework {
         max-height: 24vh;
     }
-    .linework-label {
-        width: clamp(80px, 10vw, 120px);
-        margin-bottom: 0.4rem;
-    }
 }
 
 /* Very short landscape (an older phone on its side) needs one more notch. */
@@ -354,17 +343,10 @@ a:hover {
     .linework {
         max-height: 20vh;
     }
-    .linework-label {
-        margin-bottom: 0.25rem;
-    }
 }
 
-/* Below this there is genuinely no room for a captioned drawing. The house
-   stays as a horizon; the place name steps aside rather than crowd the text. */
+/* Below this the house is only a horizon. */
 @media (max-height: 340px) {
-    .linework-label {
-        display: none;
-    }
     .linework {
         max-height: 18vh;
     }
