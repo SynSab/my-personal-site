@@ -182,21 +182,60 @@ a:hover {
 }
 
 
-/* ─── Linework ────────────────────────────────────── */
-/* The house sits on the bottom edge of the viewport like a horizon, and
-   draws itself once on load. Regenerate the SVG in index.html with:
-   python3 tools/linework.py "<file>.3dm" -o _preview/house.svg           */
+/* ─── Home ────────────────────────────────────────── */
+/* The drawing is the page. It sits at the top, as large as the window
+   allows, and the name and the sentence are a caption under its right
+   edge. Everything is one column whose width is the drawing's width:
+   the full window, unless that would make the drawing taller than its
+   share of the screen. --aspect is set on <main> in the page.          */
 
-.linework-bed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
+.home {
+    max-width: none;
+    padding: 0 clamp(1rem, 4vw, 3rem);
+    --drawing-share: 64vh;   /* the most of the screen the drawing may take */
+}
+
+.home main {
+    width: min(100%, 1500px, calc(var(--drawing-share) * var(--aspect)));
+    margin: 0 auto;
+    padding: clamp(1.5rem, 6vh, 4.5rem) 0 2.5rem;
+}
+
+.caption {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
+    margin-top: clamp(0.75rem, 3vh, 2rem);
+}
+
+.home header {
+    margin-bottom: 0;
+}
+
+.home h1 {
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.6rem);
+    letter-spacing: 0.06em;
+}
+
+.home .flow {
     justify-content: flex-end;
+}
+
+.home .fragment {
+    font-size: 1.15rem;
+}
+
+
+/* ─── Linework ────────────────────────────────────── */
+/* The house draws itself once on load. Regenerate the SVG in index.html
+   with:
+   python3 tools/linework.py "<file>.3dm" -o _preview/house.svg           */
+
+.stage {
+    position: relative;
+}
+
+.linework-bed {
     pointer-events: none;
     /* stroke and opacity live here so every line in the bed is one ink */
     stroke: var(--text);
@@ -204,12 +243,9 @@ a:hover {
 }
 
 .linework {
+    display: block;
     width: 100%;
-    max-width: 1500px;
     height: auto;
-    /* Ceiling as well as a width, or a wide short screen gets a house that
-       eats the page. The SVG centres itself inside whatever box is left. */
-    max-height: 38vh;
 }
 
 .linework-bed .ln {
@@ -240,7 +276,8 @@ a:hover {
    python3 tools/linework.py "<file>.3dm" --only outlines --inject index.html --plants-only */
 
 .plants-bed {
-    z-index: 0;              /* above the page, so a plant can be clicked */
+    position: absolute;      /* a second sheet laid exactly over the house */
+    inset: 0;
     opacity: 1;              /* each plant sets its own strength below */
 }
 
@@ -323,31 +360,10 @@ a:hover {
     }
 }
 
-/* Short viewports (a phone turned sideways) have no room for both a
-   full-height header and a 38vh house — the text lands on the roof. */
-@media (max-height: 560px) {
-    body {
-        padding-top: 3rem;
-        padding-bottom: 4rem;
-    }
-    .linework {
-        max-height: 24vh;
-    }
-}
-
-/* Very short landscape (an older phone on its side) needs one more notch. */
+/* A short window (a phone turned sideways) gives the drawing a smaller
+   share, so the name and the sentence still fit under it. */
 @media (max-height: 430px) {
-    body {
-        padding-top: 2rem;
-    }
-    .linework {
-        max-height: 20vh;
-    }
-}
-
-/* Below this the house is only a horizon. */
-@media (max-height: 340px) {
-    .linework {
-        max-height: 18vh;
+    .home {
+        --drawing-share: 52vh;
     }
 }
