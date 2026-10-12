@@ -258,13 +258,16 @@ def to_d(p):
 
 def build(items, duration=20.0, seed=7, amp_ratio=0.003, overlap=0.55,
           order="layer", layer_order=("outlines",), pad=0.03, width=0.0016,
-          simplify=0.0006):
+          simplify=0.0006, pen_scale=None):
 
     xs = [q[0] for p, _ in items for q in p]
     ys = [q[1] for p, _ in items for q in p]
     minx, maxx, miny, maxy = min(xs), max(xs), min(ys), max(ys)
     w, h = maxx - minx, maxy - miny
-    scale = max(w, h)
+    # Line weight, wobble and tolerances are all fractions of the drawing's
+    # size. pen_scale borrows another drawing's size, so that two drawings of
+    # different widths are made with the same pen.
+    scale = pen_scale or max(w, h)
 
     # flip Rhino's y-up into SVG's y-down, and zero the origin
     items = [([(x - minx, maxy - y) for x, y in p], l) for p, l in items]
