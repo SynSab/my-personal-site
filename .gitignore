@@ -3,5 +3,8 @@ NOTES.md
 notes/
 _preview/
 
+# Python environment for tools/ (holds rhino3dm, the Rhino file reader)
+.venv/
+
 # macOS
 .DS_Store
