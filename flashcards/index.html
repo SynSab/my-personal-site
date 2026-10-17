@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards — Emmett Solomon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Paths are absolute: the page is served at /flashcards with no
+         trailing slash, where a relative path would point at the site root. -->
+    <link rel="stylesheet" href="/flashcards/flashcards.css">
+</head>
+<body>
+
+    <header>
+        <a class="home" href="/">Emmett Solomon</a>
+        <h1>Korean</h1>
+    </header>
+
+    <main>
+        <!-- Filled from the "deck" column of vocab.csv. Remembered per browser. -->
+        <div class="decks" role="group" aria-label="Deck" hidden>
+            <span class="toggle-label">Deck</span>
+        </div>
+
+        <div class="controls">
+            <!-- Which side faces up when a card arrives. Remembered per browser. -->
+            <div class="toggle" role="group" aria-label="Show first">
+                <span class="toggle-label">Show first</span>
+                <button type="button" data-front="korean" aria-pressed="true">한국어</button>
+                <button type="button" data-front="english" aria-pressed="false">English</button>
+            </div>
+            <button type="button" class="shuffle">Shuffle</button>
+        </div>
+
+        <div class="card" tabindex="0" role="button" aria-label="Flip card">
+            <div class="card-inner">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+            </div>
+        </div>
+
+        <nav class="pager">
+            <button type="button" class="prev" aria-label="Previous card">&larr;</button>
+            <span class="count"></span>
+            <button type="button" class="next" aria-label="Next card">&rarr;</button>
+        </nav>
+
+        <p class="hint">Tap the card to flip. Arrow keys move, space flips.</p>
+    </main>
+
+    <script src="/flashcards/flashcards.js"></script>
+</body>
+</html>

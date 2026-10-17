@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Nanum+Myeongjo&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Same palette as the homepage (styles.css). */
+:root {
+    --bg:     #f8f5f0;
+    --text:   #1a1a18;
+    --muted:  #9a9690;
+    --accent: #7a8f72;
+    --rule:   #e8e3dc;
+    --card:   #fffdf9;
+}
+
+body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 1.2rem;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4rem 1rem 6rem;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+header {
+    margin-bottom: 2.5rem;
+}
+
+.home {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+}
+
+.home:hover {
+    color: var(--accent);
+}
+
+h1 {
+    font-size: 2.6rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+}
+
+
+/* ─── Controls ────────────────────────────────────── */
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toggle-label {
+    color: var(--muted);
+}
+
+.decks {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+}
+
+.decks[hidden] {
+    display: none;
+}
+
+.decks button {
+    color: var(--muted);
+    border-bottom: 1px solid transparent;
+    font-variant-numeric: lining-nums;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.decks button[aria-pressed="true"] {
+    color: var(--text);
+    border-bottom-color: var(--text);
+}
+
+.decks button:hover {
+    color: var(--accent);
+}
+
+.toggle button,
+.shuffle {
+    color: var(--muted);
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.toggle button[aria-pressed="true"] {
+    color: var(--text);
+    border-bottom-color: var(--text);
+}
+
+.toggle button:hover,
+.shuffle:hover {
+    color: var(--accent);
+}
+
+.toggle button[data-front="korean"] {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 0.95em;
+}
+
+
+/* ─── The card ────────────────────────────────────── */
+/*
+   Two faces back to back inside .card-inner, which turns 180° on
+   .flipped. Which language goes on which face is decided in the script,
+   so the "show first" toggle only swaps the text, never the geometry.
+*/
+
+.card {
+    perspective: 1400px;
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    outline: none;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(26, 26, 24, 0.04), 0 8px 24px rgba(26, 26, 24, 0.05);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.card:focus-visible .face {
+    border-color: var(--accent);
+}
+
+.face-back {
+    transform: rotateY(180deg);
+}
+
+.word {
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    /* Cormorant's default old-style 0 reads as a letter o. */
+    font-variant-numeric: lining-nums;
+}
+
+.word.ko {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 400;
+}
+
+.speak {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--muted);
+    transition: color 0.3s ease, background 0.3s ease;
+}
+
+.speak:hover,
+.speak.playing {
+    color: var(--accent);
+    background: var(--bg);
+}
+
+.speak svg {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+
+.empty {
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+
+/* ─── Pager ───────────────────────────────────────── */
+
+.pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.pager button {
+    font-size: 1.6rem;
+    width: 3rem;
+    height: 3rem;
+    color: var(--muted);
+    transition: color 0.3s ease;
+}
+
+.pager button:hover {
+    color: var(--accent);
+}
+
+.count {
+    min-width: 4rem;
+    text-align: center;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.hint {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-inner {
+        transition: none;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 2.5rem;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        aspect-ratio: 4 / 3;
+    }
+}
