@@ -118,9 +118,9 @@ const CONFIG = {
         shiftEm:    0.42,   // how far "lomon" steps away from "So"
         hopEm:      0.78,   // how high the i jumps over the g
 
-        // Where "login" goes when clicked. While this is null the word
-        // is not a link — there is no login page yet.
-        href: null,
+        // Where "login" goes when clicked: the plant app. Set to null
+        // and the word is not a link.
+        href: '/plants',
 
         // Each beat's [start, end] on a 0..1 timeline can be overridden
         // here, e.g.  beats: { hop: [0.60, 0.90] }.  The full table, with
