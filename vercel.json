@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/plants", "destination": "https://plant-app-eight.vercel.app/plants" },
+    { "source": "/plants/:path*", "destination": "https://plant-app-eight.vercel.app/plants/:path*" }
+  ]
+}
