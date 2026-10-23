@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean — Emmett Solomon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Paths are absolute: the page is served at /korean with no
+         trailing slash, where a relative path would point at the site root. -->
+    <link rel="stylesheet" href="/korean/korean.css">
+</head>
+<body>
+
+    <header>
+        <a class="home" href="/">Emmett Solomon</a>
+        <h1>Korean</h1>
+    </header>
+
+    <main>
+        <!-- 1. Pick a deck. Filled from the "deck" column of vocab.csv. -->
+        <section class="screen decks-screen" hidden>
+            <p class="step">Choose a deck</p>
+            <ul class="deck-list"></ul>
+        </section>
+
+        <!-- 2. Pick a mode for that deck. -->
+        <section class="screen modes-screen" hidden>
+            <a class="back" href="#">&larr; Decks</a>
+            <h2 class="deck-title"></h2>
+
+            <div class="mode-list">
+                <a class="mode" data-mode="base">
+                    <span class="mode-name">Base</span>
+                    <span class="mode-about">Flip through the cards.</span>
+                </a>
+                <a class="mode" data-mode="learn">
+                    <span class="mode-name">Learn</span>
+                    <span class="mode-about">A few words at a time, until you know them.</span>
+                    <span class="mode-about learn-summary"></span>
+                </a>
+            </div>
+
+            <div class="settings">
+                <!-- Say the Korean by itself as it appears. Remembered per browser. -->
+                <div class="toggle sound" role="group" aria-label="Read aloud">
+                    <span class="toggle-label">Read aloud</span>
+                    <button type="button" data-sound="on" aria-pressed="true">On</button>
+                    <button type="button" data-sound="off" aria-pressed="false">Off</button>
+                </div>
+                <button type="button" class="restart" hidden>Start Learn over</button>
+            </div>
+        </section>
+
+        <!-- 3. Study: the chosen mode, with only the language toggle. -->
+        <section class="screen study-screen" hidden>
+            <div class="study-bar">
+                <a class="back" href="#"></a>
+                <!-- Which language you see first. Remembered per browser. -->
+                <div class="toggle front" role="group">
+                    <span class="toggle-label"></span>
+                    <button type="button" data-front="korean" aria-pressed="true">한국어</button>
+                    <button type="button" data-front="english" aria-pressed="false">English</button>
+                </div>
+            </div>
+
+            <div class="base" data-mode-panel="base" hidden>
+                <div class="card" tabindex="0" role="button" aria-label="Flip card">
+                    <div class="card-inner">
+                        <div class="face face-front"></div>
+                        <div class="face face-back"></div>
+                    </div>
+                </div>
+
+                <nav class="pager">
+                    <button type="button" class="prev" aria-label="Previous card">&larr;</button>
+                    <span class="count"></span>
+                    <button type="button" class="next" aria-label="Next card">&rarr;</button>
+                </nav>
+
+                <p class="hint">Tap the card to flip. Arrow keys move, space flips.</p>
+            </div>
+
+            <!-- Questions are drawn into .learn-stage by learn.js. -->
+            <div class="learn" data-mode-panel="learn" hidden>
+                <div class="meter" aria-hidden="true">
+                    <span class="meter-learned"></span><span class="meter-learning"></span>
+                </div>
+                <p class="learn-count"></p>
+                <div class="learn-stage" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <p class="empty" hidden>Couldn’t load the word list.</p>
+    </main>
+
+    <script src="/korean/app.js"></script>
+    <script src="/korean/base.js"></script>
+    <script src="/korean/learn.js"></script>
+</body>
+</html>
