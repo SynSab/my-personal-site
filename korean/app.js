@@ -3,14 +3,14 @@
 
    The words live in vocab.csv next to this file: one card per row,
    a "korean" column, an "english" column and a "deck" column (the
-   deck's name, e.g. Counting; leave it out and every card is one deck).
+   deck's name, e.g. 2-2 Numbers; leave it out and every card is one deck).
    Decks are listed in the order they first appear in the file. Edit it
    in any spreadsheet app or text editor; the page reads it fresh on
    every load.
 
    The page is three screens in turn: pick a deck, pick a mode, study.
-   Each has its own address after the # (#counting, then
-   #counting/learn), so the phone's back button steps back through them.
+   Each has its own address after the # (#2-2-numbers, then
+   #2-2-numbers/learn), so the phone's back button steps back through them.
    This file runs the screens, the words and the voice. Each mode lives
    in its own file (base.js, learn.js, terms.js) and adds itself to
    Korean.modes.
@@ -121,7 +121,7 @@
        no progress to keep.
     */
 
-    const NUMBERS_DECK = 'Counting';   // the deck that gets the extras
+    const NUMBERS_DECK = '2-2 Numbers';   // the deck that gets the extras
     const EXTRA_COUNT = 20;     // random numbers added each time
     const EXTRA_MAX = 999;
 

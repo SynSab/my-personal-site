@@ -1,64 +1,77 @@
 korean,english,deck
-저는 미국 사람이에요,I'm American,Where you're from
-나라,"country, nation",Where you're from
-한국,(South) Korea,Where you're from
-일본,Japan,Where you're from
-중국,China,Where you're from
-인도,India,Where you're from
-베트남,Vietnam,Where you're from
-호주,Australia,Where you're from
-영국,United Kingdom,Where you're from
-독일,Germany,Where you're from
-프랑스,France,Where you're from
-러시아,Russia,Where you're from
-미국,U.S.A.,Where you're from
-브라질,Brazil,Where you're from
-사람,person,Where you're from
-공,0 (as in nothing),Counting
-영,0 (as in the actual numerical value zero),Counting
-일,1,Counting
-이,2,Counting
-삼,3,Counting
-사,4,Counting
-오,5,Counting
-육,6,Counting
-칠,7,Counting
-팔,8,Counting
-구,9,Counting
-십,10,Counting
-십일,11,Counting
-이십,20,Counting
-삼십,30,Counting
-사십,40,Counting
-오십,50,Counting
-육십,60,Counting
-칠십,70,Counting
-팔십,80,Counting
-구십,90,Counting
-백,100,Counting
-이백,200,Counting
-과,lesson,Counting
-층,floor,Counting
-번,number,Counting
-원,won,Counting
-달러,dollar,Counting
-안녕하세요,Hello!,Words for the wall
-반갑습니다,Nice to meet you!,Words for the wall
-안녕히 계세요,Please stay well!,Words for the wall
-안녕히 가세요,Please go well!,Words for the wall
-감사합니다,Thank you!,Words for the wall
-보세요,Please look!,Words for the wall
-읽으세요,Please read!,Words for the wall
-쓰세요,Please write!,Words for the wall
-들으세요,Please listen!,Words for the wall
-앉으세요,Please sit!,Words for the wall
-이야기하세요,Please talk!,Words for the wall
-따라 하세요,Please repeat after me!,Words for the wall
-쉬세요,Please rest!,Words for the wall
-알아요,I know,Words for the wall
-몰라요,I don't know,Words for the wall
-좋아요,Good!,Words for the wall
-안 좋아요,Not good!,Words for the wall
-죄송합니다,I'm sorry!,Words for the wall
-실례합니다,Excuse me!,Words for the wall
-수고하셨습니다,Thanks for your effort!,Words for the wall
+보세요,Please look!,2-2 Classroom Korean
+읽으세요,Please read!,2-2 Classroom Korean
+쓰세요,Please write!,2-2 Classroom Korean
+들으세요,Please listen!,2-2 Classroom Korean
+앉으세요,Please sit!,2-2 Classroom Korean
+이야기하세요,Please talk!,2-2 Classroom Korean
+따라 하세요,Please repeat after me!,2-2 Classroom Korean
+쉬세요,Please rest!,2-2 Classroom Korean
+알아요,I know,2-2 Classroom Korean
+몰라요,I don't know,2-2 Classroom Korean
+좋아요,Good!,2-2 Classroom Korean
+안 좋아요,Not good!,2-2 Classroom Korean
+공,0 (as in nothing),2-2 Numbers
+영,0 (as in the actual numerical value zero),2-2 Numbers
+일,1,2-2 Numbers
+이,2,2-2 Numbers
+삼,3,2-2 Numbers
+사,4,2-2 Numbers
+오,5,2-2 Numbers
+육,6,2-2 Numbers
+칠,7,2-2 Numbers
+팔,8,2-2 Numbers
+구,9,2-2 Numbers
+십,10,2-2 Numbers
+십일,11,2-2 Numbers
+이십,20,2-2 Numbers
+삼십,30,2-2 Numbers
+사십,40,2-2 Numbers
+오십,50,2-2 Numbers
+육십,60,2-2 Numbers
+칠십,70,2-2 Numbers
+팔십,80,2-2 Numbers
+구십,90,2-2 Numbers
+백,100,2-2 Numbers
+이백,200,2-2 Numbers
+과,lesson,2-2 Numbers
+층,floor,2-2 Numbers
+번,number,2-2 Numbers
+원,won,2-2 Numbers
+달러,dollar,2-2 Numbers
+안녕하세요,Hello!,2-2 Greetings
+반갑습니다,Nice to meet you!,2-2 Greetings
+안녕히 계세요,Please stay well!,2-2 Greetings
+안녕히 가세요,Please go well!,2-2 Greetings
+감사합니다,Thank you!,2-2 Greetings
+죄송합니다,I'm sorry!,2-2 Greetings
+실례합니다,Excuse me!,2-2 Greetings
+수고하셨습니다,Thanks for your effort!,2-2 Greetings
+저는 미국 사람이에요,I'm American,3-1 Countries
+나라,"country, nation",3-1 Countries
+한국,(South) Korea,3-1 Countries
+일본,Japan,3-1 Countries
+중국,China,3-1 Countries
+인도,India,3-1 Countries
+베트남,Vietnam,3-1 Countries
+호주,Australia,3-1 Countries
+영국,United Kingdom,3-1 Countries
+독일,Germany,3-1 Countries
+프랑스,France,3-1 Countries
+러시아,Russia,3-1 Countries
+미국,U.S.A.,3-1 Countries
+브라질,Brazil,3-1 Countries
+사람,person,3-1 Countries
+직업,"job, occupation",3-2 Jobs
+가수,singer,3-2 Jobs
+학생,student,3-2 Jobs
+기자,reporter,3-2 Jobs
+의사,doctor,3-2 Jobs
+군인,soldier,3-2 Jobs
+경찰,police officer,3-2 Jobs
+선생님,teacher,3-2 Jobs
+회사원,company employee,3-2 Jobs
+요리사,cook,3-2 Jobs
+간호사,nurse,3-2 Jobs
+변호사,lawyer,3-2 Jobs
+연구원,researcher,3-2 Jobs
