@@ -164,6 +164,12 @@ h1 {
     color: var(--accent);
 }
 
+/* Decks made in Terms. */
+.deck-link.mine .deck-size::before {
+    content: 'yours · ';
+    font-style: italic;
+}
+
 
 /* ─── 2. Modes ────────────────────────────────────── */
 
@@ -213,7 +219,8 @@ h2 {
     margin-top: 1.5rem;
 }
 
-.restart {
+.restart,
+.delete-deck {
     color: var(--muted);
     font-size: 1rem;
     transition: color 0.3s ease;
@@ -221,6 +228,11 @@ h2 {
 
 .restart:hover {
     color: var(--accent);
+}
+
+.delete-deck:hover,
+.delete-deck[data-armed] {
+    color: var(--wrong);
 }
 
 /* Mouse only: a phone keeps "hover" on the spot last tapped. */
@@ -588,6 +600,105 @@ h2 {
 .round-list .en {
     color: var(--muted);
     text-align: right;
+}
+
+
+/* ─── Terms ───────────────────────────────────────── */
+
+/* Stays in view while scrolling a long list. */
+.terms-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.75rem 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+}
+
+.terms-pick,
+.name-deck {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.name-deck input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 1.1rem;
+    padding: 0.3rem 0.6rem;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    outline: none;
+}
+
+.name-deck input:focus {
+    border-color: var(--accent);
+}
+
+.name-problem {
+    margin-top: 0.4rem;
+    color: var(--wrong);
+    font-size: 0.95rem;
+}
+
+.terms-count {
+    flex: 1;
+    text-align: right;
+    color: var(--muted);
+    font-size: 1rem;
+}
+
+.primary:disabled {
+    cursor: default;
+    background: var(--rule);
+    color: var(--muted);
+}
+
+.term-list {
+    list-style: none;
+}
+
+.term-list li {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--rule);
+}
+
+.term {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.7rem 0.25rem;
+    cursor: pointer;
+}
+
+.term input {
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    align-self: center;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.term-ko {
+    font-size: 1.3rem;
+}
+
+.term-en {
+    flex: 1;
+    text-align: right;
+    color: var(--muted);
+}
+
+.term:has(input:checked) .term-en {
+    color: var(--text);
 }
 
 

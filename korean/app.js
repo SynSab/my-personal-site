@@ -12,7 +12,12 @@
    Each has its own address after the # (#counting, then
    #counting/learn), so the phone's back button steps back through them.
    This file runs the screens, the words and the voice. Each mode lives
-   in its own file (base.js, learn.js) and adds itself to Korean.modes.
+   in its own file (base.js, learn.js, terms.js) and adds itself to
+   Korean.modes.
+
+   Decks made in Terms are kept in this browser only, listed after the
+   ones from vocab.csv. Each keeps its own copy of its words, so editing
+   or removing a row in the file doesn't change a deck already made.
 
    Read-aloud uses the browser's own Korean voice (Web Speech API), so
    there is nothing to pay for and no key to keep. Quality depends on the
@@ -24,6 +29,7 @@
     const VOCAB_URL = '/korean/vocab.csv';
     const FRONT_KEY = 'korean.front';   // language seen first: 'korean' or 'english'
     const SOUND_KEY = 'korean.sound';   // 'off' to stop reading Korean aloud by itself
+    const DECKS_KEY = 'korean.decks';   // decks made in Terms: [{ name, words: [card…] }]
 
     const screens = {
         decks: document.querySelector('.decks-screen'),
@@ -36,10 +42,13 @@
     const frontBtns  = document.querySelectorAll('.front button');
     const frontLabel = document.querySelector('.front .toggle-label');
     const soundBtns  = document.querySelectorAll('.sound button');
+    const frontGroup = document.querySelector('.front');
+    const deleteBtn  = document.querySelector('.delete-deck');
 
     const modes = {};      // filled in by base.js and learn.js
     let allCards = [];     // every row of vocab.csv
-    let decks = [];        // { name, slug, label }, 'all' last
+    let myDecks = readDecks();   // decks made in Terms
+    let decks = [];        // { name, slug, label, mine }, 'all' last
     let current = null;    // the mode on the study screen, if any
     let frontLang = readSetting(FRONT_KEY) === 'english' ? 'english' : 'korean';
     let soundOn = readSetting(SOUND_KEY) !== 'off';
@@ -84,9 +93,11 @@
             .filter(c => c.korean && c.english);
     }
 
-    // A deck's rows from vocab.csv.
+    // A deck's cards: rows from vocab.csv, or the words of a deck made in Terms.
     function listed(name) {
-        return name === 'all' ? allCards.slice() : allCards.filter(c => c.deck === name);
+        if (name === 'all') return allCards.slice();
+        const mine = myDecks.find(d => d.name === name);
+        return mine ? mine.words.slice() : allCards.filter(c => c.deck === name);
     }
 
     function shuffled(list) {
@@ -248,21 +259,71 @@
     soundBtns.forEach(b => b.addEventListener('click', () => setSound(b.dataset.sound === 'on')));
 
 
+    // ─── Decks made in Terms ─────────────────────────────
+
+    function readDecks() {
+        try {
+            const saved = JSON.parse(readSetting(DECKS_KEY));
+            return Array.isArray(saved) ? saved : [];
+        } catch (e) { return []; }
+    }
+
+    function saveDecks() {
+        saveSetting(DECKS_KEY, JSON.stringify(myDecks));
+        buildDecks();
+    }
+
+    // Why a name can't be used, or '' if it can. Each deck needs its own
+    // address, so two names that read the same after the # clash.
+    function nameProblem(name) {
+        const slug = slugOf(name);
+        if (!slug) return 'A deck name needs a letter or number in it.';
+        if (decks.some(d => d.slug === slug)) return 'There’s already a deck called ' + name + '.';
+        return '';
+    }
+
+    // Saves a new deck and returns its address after the #.
+    function addDeck(name, words) {
+        myDecks.push({
+            name,
+            words: words.map(c => ({ korean: c.korean, english: c.english, deck: c.deck })),
+        });
+        saveDecks();
+        return slugOf(name);
+    }
+
+    let shownDeck = null;   // the deck on the mode screen
+
+    // Two taps rather than confirm(), which some browsers block.
+    deleteBtn.addEventListener('click', () => {
+        if (!deleteBtn.dataset.armed) {
+            deleteBtn.dataset.armed = 'yes';
+            deleteBtn.textContent = 'Tap again to delete';
+            return;
+        }
+        myDecks = myDecks.filter(d => d.name !== shownDeck.name);
+        saveDecks();
+        location.hash = '';
+    });
+
+
     // ─── Screens ─────────────────────────────────────────
 
-    const slugOf = name => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    // Letters in any script, so a deck can have a Korean name.
+    const slugOf = name => name.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
 
-    // The decks in vocab.csv order, then All. A list with no deck
-    // column is a single deck, All.
+    // The decks in vocab.csv order, then any made in Terms, then All.
+    // A list with no deck column is a single deck, All.
     function buildDecks() {
         const names = [...new Set(allCards.map(c => c.deck).filter(Boolean))];
         decks = names.map(name => ({ name, slug: slugOf(name), label: name }))
+            .concat(myDecks.map(d => ({ name: d.name, slug: slugOf(d.name), label: d.name, mine: true })))
             .concat({ name: 'all', slug: 'all', label: names.length ? 'All' : 'All words' });
 
         deckList.innerHTML = '';
         decks.forEach(d => {
             const a = document.createElement('a');
-            a.className = 'deck-link';
+            a.className = 'deck-link' + (d.mine ? ' mine' : '');
             a.href = '#' + d.slug;
             const name = document.createElement('span');
             name.className = 'deck-name';
@@ -284,7 +345,11 @@
     }
 
     function showModes(deck) {
+        shownDeck = deck;
         deckTitle.textContent = deck.label;
+        deleteBtn.hidden = !deck.mine;
+        delete deleteBtn.dataset.armed;
+        deleteBtn.textContent = 'Delete this deck';
         document.querySelectorAll('.mode').forEach(a => {
             a.href = '#' + deck.slug + '/' + a.dataset.mode;
         });
@@ -296,8 +361,10 @@
         current = modes[name];
         studyBack.href = '#' + deck.slug;
         studyBack.textContent = '← ' + deck.label;
-        frontLabel.textContent = current.frontLabel;
-        document.querySelector('.front').setAttribute('aria-label', current.frontLabel);
+        // Terms shows both languages side by side, so it has no toggle.
+        frontGroup.hidden = !current.frontLabel;
+        frontLabel.textContent = current.frontLabel || '';
+        frontGroup.setAttribute('aria-label', current.frontLabel || '');
         document.querySelectorAll('[data-mode-panel]').forEach(p => {
             p.hidden = p.dataset.modePanel !== name;
         });
@@ -334,6 +401,8 @@
         speak,
         sayIfOn,
         speakButton,
+        nameProblem,
+        addDeck,
     };
 
 

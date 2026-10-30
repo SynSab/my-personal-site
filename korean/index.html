@@ -39,6 +39,10 @@
                     <span class="mode-about">A few words at a time, until you know them.</span>
                     <span class="mode-about learn-summary"></span>
                 </a>
+                <a class="mode" data-mode="terms">
+                    <span class="mode-name">Terms</span>
+                    <span class="mode-about">Every word in the deck. Pick some to make a deck of your own.</span>
+                </a>
             </div>
 
             <div class="settings">
@@ -49,6 +53,8 @@
                     <button type="button" data-sound="off" aria-pressed="false">Off</button>
                 </div>
                 <button type="button" class="restart" hidden>Start Learn over</button>
+                <!-- Only on decks made in Terms. -->
+                <button type="button" class="delete-deck" hidden>Delete this deck</button>
             </div>
         </section>
 
@@ -89,6 +95,25 @@
                 <p class="learn-count"></p>
                 <div class="learn-stage" aria-live="polite"></div>
             </div>
+
+            <!-- The list is drawn into .term-list by terms.js. -->
+            <div class="terms" data-mode-panel="terms" hidden>
+                <div class="terms-bar">
+                    <div class="terms-pick">
+                        <button type="button" class="quiet select-all">Select all</button>
+                        <span class="terms-count"></span>
+                        <button type="button" class="primary make-deck" disabled>New deck</button>
+                    </div>
+                    <!-- Takes the place of the row above while naming a new deck. -->
+                    <form class="name-deck" hidden>
+                        <input type="text" maxlength="40" placeholder="Name the deck" aria-label="Deck name">
+                        <button type="button" class="quiet cancel-name">Cancel</button>
+                        <button type="submit" class="primary">Save</button>
+                    </form>
+                    <p class="name-problem" hidden></p>
+                </div>
+                <ul class="term-list"></ul>
+            </div>
         </section>
 
         <p class="empty" hidden>Couldn’t load the word list.</p>
@@ -97,5 +122,6 @@
     <script src="/korean/app.js"></script>
     <script src="/korean/base.js"></script>
     <script src="/korean/learn.js"></script>
+    <script src="/korean/terms.js"></script>
 </body>
 </html>
