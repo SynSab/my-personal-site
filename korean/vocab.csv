@@ -47,21 +47,24 @@ korean,english,deck
 죄송합니다,I'm sorry!,2-2 Greetings
 실례합니다,Excuse me!,2-2 Greetings
 수고하셨습니다,Thanks for your effort!,2-2 Greetings
-저는 미국 사람이에요,I'm American,3-1 Countries
-나라,"country, nation",3-1 Countries
-한국,(South) Korea,3-1 Countries
-일본,Japan,3-1 Countries
-중국,China,3-1 Countries
-인도,India,3-1 Countries
-베트남,Vietnam,3-1 Countries
-호주,Australia,3-1 Countries
-영국,United Kingdom,3-1 Countries
-독일,Germany,3-1 Countries
-프랑스,France,3-1 Countries
-러시아,Russia,3-1 Countries
-미국,U.S.A.,3-1 Countries
-브라질,Brazil,3-1 Countries
-사람,person,3-1 Countries
+저는 미국 사람이에요,I'm American,3-1 Introductions
+이름,name,3-1 Introductions
+이름이 뭐예요?,What's your name?,3-1 Introductions
+제 이름은 에멧이에요,My name is Emmett,3-1 Introductions
+나라,"country, nation",3-1 Introductions
+한국,(South) Korea,3-1 Introductions
+일본,Japan,3-1 Introductions
+중국,China,3-1 Introductions
+인도,India,3-1 Introductions
+베트남,Vietnam,3-1 Introductions
+호주,Australia,3-1 Introductions
+영국,United Kingdom,3-1 Introductions
+독일,Germany,3-1 Introductions
+프랑스,France,3-1 Introductions
+러시아,Russia,3-1 Introductions
+미국,U.S.A.,3-1 Introductions
+브라질,Brazil,3-1 Introductions
+사람,person,3-1 Introductions
 직업,"job, occupation",3-2 Jobs
 가수,singer,3-2 Jobs
 학생,student,3-2 Jobs
