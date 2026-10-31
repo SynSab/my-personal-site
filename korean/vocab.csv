@@ -11,6 +11,8 @@ korean,english,deck
 몰라요,I don't know,2-2 Classroom Korean
 좋아요,Good!,2-2 Classroom Korean
 안 좋아요,Not good!,2-2 Classroom Korean
+네 / 예,yes,2-2 Classroom Korean
+아니요,no,2-2 Classroom Korean
 공,0 (as in nothing),2-2 Numbers
 영,0 (as in the actual numerical value zero),2-2 Numbers
 일,1,2-2 Numbers
@@ -53,6 +55,7 @@ korean,english,deck
 제 이름은 에멧이에요,My name is Emmett,3-1 Introductions
 저는 에멧이에요,I am Emmett,3-1 Introductions
 나라,"country, nation",3-1 Introductions
+국적,nationality,3-1 Introductions
 한국,(South) Korea,3-1 Introductions
 일본,Japan,3-1 Introductions
 중국,China,3-1 Introductions
@@ -79,3 +82,19 @@ korean,english,deck
 간호사,nurse,3-2 Jobs
 변호사,lawyer,3-2 Jobs
 연구원,researcher,3-2 Jobs
+이쪽,"this side; this person (polite)",3-2 Personal Questions
+여기,here,3-2 Personal Questions
+이분,this person (honorific),3-2 Personal Questions
+이/가,"subject marker (이 after a consonant, 가 after a vowel)",3-2 Personal Questions
+아니에요,"is not, am not (아니다)",3-2 Personal Questions
+그래요?,"Is that so? / Really?",3-2 Personal Questions
+그럼,"well then; if so",3-2 Personal Questions
+직업이 뭐예요?,What's your job?,3-2 Personal Questions
+어느 나라 사람이에요?,Which country are you from?,3-2 Personal Questions
+[직업]이에요/예요?,Are you a [job]?,3-2 Personal Questions
+저는 [직업]이에요/예요,I'm a [job],3-2 Personal Questions
+저는 [직업]이/가 아니에요,I'm not a [job],3-2 Personal Questions
+[나라] 사람이에요?,Are you from [country]?,3-2 Personal Questions
+저는 [나라] 사람이에요,I'm from [country],3-2 Personal Questions
+저는 [나라] 사람이 아니에요,I'm not from [country],3-2 Personal Questions
+이쪽은 민준 씨예요,This is Minjun,3-2 Personal Questions
