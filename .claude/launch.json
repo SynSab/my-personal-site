@@ -4,8 +4,23 @@
     {
       "name": "site",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4173"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4173"
+      ],
       "port": 4173
+    },
+    {
+      "name": "plant-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "/Users/emmettsolomon/Desktop/Claudius/plant-app",
+        "run",
+        "dev"
+      ],
+      "port": 3000
     }
   ]
 }
